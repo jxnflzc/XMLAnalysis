@@ -38,30 +38,6 @@ namespace XMLAnalysis
             this.list_parameter.Items.Clear();
         }
 
-        private ClassDiagram GetClassDiagramByName(String name)
-        {
-            foreach (ClassDiagram cd in this.cdList)
-            {
-                if (cd.GetName() == name)
-                {
-                    return cd;
-                }
-            }
-            return null;
-        }
-
-        private Operation GetOperationByName(String name)
-        {
-            foreach (Operation op in this.opList)
-            {
-                if (op.GetName() == name)
-                {
-                    return op;
-                }
-            }
-            return null;
-        }
-
         private void ChooseFile(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog
@@ -89,7 +65,7 @@ namespace XMLAnalysis
 
                 foreach (ClassDiagram cd in this.cdList)
                 {
-                    this.list_class.Items.Add(cd.GetName());
+                    this.list_class.Items.Add(cd.Name);
                 }
             }
             catch
@@ -103,22 +79,22 @@ namespace XMLAnalysis
             ListInit();
             opList = new List<Operation>();
 
-            ClassDiagram cd = GetClassDiagramByName((String)this.list_class.SelectedItem);
+            ClassDiagram cd = XMLUtil.GetClassDiagramByName(this.cdList, (String)this.list_class.SelectedItem);
 
             if (cd != null)
             {
-                this.list_ck.Items.Add("Dit: " + cd.GetDit());
-                this.list_ck.Items.Add("Cbo: " + cd.GetCbo());
-                this.list_ck.Items.Add("Noc: " + cd.GetNoc());
+                this.list_ck.Items.Add("Dit: " + cd.Dit);
+                this.list_ck.Items.Add("Cbo: " + cd.Cbo);
+                this.list_ck.Items.Add("Noc: " + cd.Noc);
 
-                foreach (String attribute in cd.GetAttributes())
+                foreach (String attribute in cd.Attributes)
                 {
                     this.list_attribute.Items.Add(attribute);
                 }
 
-                foreach (Operation operation in cd.GetOperations())
+                foreach (Operation operation in cd.Operations)
                 {
-                    this.list_operation.Items.Add(operation.GetName());
+                    this.list_operation.Items.Add(operation.Name);
                     opList.Add(operation);
                 }
             }
@@ -128,11 +104,11 @@ namespace XMLAnalysis
         {
             this.list_parameter.Items.Clear();
 
-            Operation op = GetOperationByName((String)this.list_operation.SelectedItem);
+            Operation op = XMLUtil.GetOperationByName(this.opList, (String)this.list_operation.SelectedItem);
 
             if (op != null)
             {
-                foreach (String parameter in op.GetParameters())
+                foreach (String parameter in op.Parameters)
                 {
                     this.list_parameter.Items.Add(parameter);
                 }
